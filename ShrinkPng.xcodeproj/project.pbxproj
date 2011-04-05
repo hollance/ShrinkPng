@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		7B26E64F134A115C00C5BC50 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B26E64E134A115C00C5BC50 /* Foundation.framework */; };
 		7B26E652134A115C00C5BC50 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B26E651134A115C00C5BC50 /* main.m */; };
+		7B26E65E134A148200C5BC50 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B26E65D134A148200C5BC50 /* ApplicationServices.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,8 +28,8 @@
 		7B26E64A134A115C00C5BC50 /* ShrinkPng */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ShrinkPng; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B26E64E134A115C00C5BC50 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7B26E651134A115C00C5BC50 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		7B26E654134A115C00C5BC50 /* ShrinkPng-Prefix.pch */ = {isa = PBXFileReference; path = "ShrinkPng-Prefix.pch"; sourceTree = "<group>"; };
-		7B26E655134A115C00C5BC50 /* ShrinkPng.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = ShrinkPng.1; sourceTree = "<group>"; };
+		7B26E654134A115C00C5BC50 /* ShrinkPng-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ShrinkPng-Prefix.pch"; sourceTree = "<group>"; };
+		7B26E65D134A148200C5BC50 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B26E65E134A148200C5BC50 /* ApplicationServices.framework in Frameworks */,
 				7B26E64F134A115C00C5BC50 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -63,6 +65,7 @@
 		7B26E64D134A115C00C5BC50 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7B26E65D134A148200C5BC50 /* ApplicationServices.framework */,
 				7B26E64E134A115C00C5BC50 /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -72,18 +75,9 @@
 			isa = PBXGroup;
 			children = (
 				7B26E651134A115C00C5BC50 /* main.m */,
-				7B26E655134A115C00C5BC50 /* ShrinkPng.1 */,
-				7B26E653134A115C00C5BC50 /* Supporting Files */,
-			);
-			path = ShrinkPng;
-			sourceTree = "<group>";
-		};
-		7B26E653134A115C00C5BC50 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
 				7B26E654134A115C00C5BC50 /* ShrinkPng-Prefix.pch */,
 			);
-			name = "Supporting Files";
+			path = ShrinkPng;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -220,6 +214,7 @@
 				7B26E65A134A115C00C5BC50 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
