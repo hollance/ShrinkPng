@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		7B26E64F134A115C00C5BC50 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B26E64E134A115C00C5BC50 /* Foundation.framework */; };
-		7B26E652134A115C00C5BC50 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B26E651134A115C00C5BC50 /* main.m */; };
 		7B26E65E134A148200C5BC50 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B26E65D134A148200C5BC50 /* ApplicationServices.framework */; };
+		7BB607BD1475C2BF00343162 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BB607BC1475C2BF00343162 /* main.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,9 +27,8 @@
 /* Begin PBXFileReference section */
 		7B26E64A134A115C00C5BC50 /* ShrinkPng */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ShrinkPng; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B26E64E134A115C00C5BC50 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		7B26E651134A115C00C5BC50 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		7B26E654134A115C00C5BC50 /* ShrinkPng-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ShrinkPng-Prefix.pch"; sourceTree = "<group>"; };
 		7B26E65D134A148200C5BC50 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
+		7BB607BC1475C2BF00343162 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,8 +73,7 @@
 		7B26E650134A115C00C5BC50 /* ShrinkPng */ = {
 			isa = PBXGroup;
 			children = (
-				7B26E651134A115C00C5BC50 /* main.m */,
-				7B26E654134A115C00C5BC50 /* ShrinkPng-Prefix.pch */,
+				7BB607BC1475C2BF00343162 /* main.m */,
 			);
 			path = ShrinkPng;
 			sourceTree = "<group>";
@@ -106,6 +104,7 @@
 		7B26E641134A115C00C5BC50 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = Hollance;
 			};
 			buildConfigurationList = 7B26E644134A115C00C5BC50 /* Build configuration list for PBXProject "ShrinkPng" */;
@@ -130,7 +129,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7B26E652134A115C00C5BC50 /* main.m in Sources */,
+				7BB607BD1475C2BF00343162 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,9 +175,10 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "ShrinkPng/ShrinkPng-Prefix.pch";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = Debug;
 		};
@@ -189,9 +189,10 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "ShrinkPng/ShrinkPng-Prefix.pch";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = Release;
 		};
