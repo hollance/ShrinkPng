@@ -18,7 +18,7 @@ CGImageRef CreateImageFromPNG(NSString *filename)
 BOOL SaveImageToPNG(NSString *filename, CGImageRef image)
 {
 	CGImageDestinationRef dest = CGImageDestinationCreateWithURL(
-		(CFURLRef)[NSURL fileURLWithPath:filename], kUTTypePNG, 1, NULL);
+		(__bridge CFURLRef)[NSURL fileURLWithPath:filename], kUTTypePNG, 1, NULL);
 
 	if (dest == NULL)
 	{
@@ -67,10 +67,9 @@ unsigned char *CreateBytesFromImage(CGImageRef image)
 
 	CGRect rect = CGRectMake(0.0f, 0.0f, width, height);
 	CGContextDrawImage(context, rect, image);
-	unsigned char *imageData = CGBitmapContextGetData(context);
 	CGContextRelease(context);
 
-	return imageData;
+	return contextData;
 }
 
 CGImageRef CreateImageFromBytes(unsigned char *data, size_t width, size_t height)
@@ -101,7 +100,7 @@ CGImageRef CreateImageFromBytes(unsigned char *data, size_t width, size_t height
 
 unsigned char *ShrinkBitmapData(unsigned char *inData, size_t width, size_t height)
 {
-	unsigned char *outData = (unsigned char *)calloc(width*height, 4);
+	unsigned char *outData = (unsigned char *)calloc(width * height, 4);
 	if (outData == NULL)
 	{
 		fprintf(stderr, "Could not allocate memory\n");
@@ -110,9 +109,9 @@ unsigned char *ShrinkBitmapData(unsigned char *inData, size_t width, size_t heig
 
 	unsigned char *ptr = outData;
 
-	for (int y = 0; y < height; y += 2)
+	for (unsigned int y = 0; y < height; y += 2)
 	{
-		for (int x = 0; x < width; x += 2)
+		for (unsigned int x = 0; x < width; x += 2)
 		{
 			size_t offset1 = (y*width + x)*4;    // top left
 			size_t offset2 = offset1 + 4;        // top right
@@ -139,7 +138,7 @@ unsigned char *ShrinkBitmapData(unsigned char *inData, size_t width, size_t heig
 			int g4 = inData[offset4 + 2];
 			int b4 = inData[offset4 + 3];
 
-			// We do +2 in order to round up if the remainder is 0.5 or more.
+			// We do + 2 in order to round up if the remainder is 0.5 or more.
 			int r = (r1 + r2 + r3 + r4 + 2) / 4;
 			int g = (g1 + g2 + g3 + g4 + 2) / 4;
 			int b = (b1 + b2 + b3 + b4 + 2) / 4;
@@ -157,61 +156,60 @@ unsigned char *ShrinkBitmapData(unsigned char *inData, size_t width, size_t heig
 
 int main(int argc, const char *argv[])
 {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
-	if (argc != 2)
+	@autoreleasepool
 	{
-		fprintf(stderr, "Usage: ShrinkPng <input@2x.png>\n");
-		return EXIT_FAILURE;
-	}
-
-	NSString *inputFilename = [NSString stringWithCString:argv[1] encoding:NSUTF8StringEncoding];
-	inputFilename = [inputFilename stringByExpandingTildeInPath];
-
-	NSString *withoutExtension = [inputFilename stringByDeletingPathExtension];
-	if (![withoutExtension hasSuffix:@"@2x"])
-	{
-		fprintf(stderr, "Input file must be @2x\n");
-		return EXIT_FAILURE;
-	}
-
-	NSString *without2x = [withoutExtension substringToIndex:withoutExtension.length - 3];
-	if (without2x.length == 0)
-	{
-		fprintf(stderr, "Invalid input filename\n");
-		return EXIT_FAILURE;
-	}
-
-	NSString *outputFilename = [without2x stringByAppendingPathExtension:@"png"];
-
-	CGImageRef inImage = CreateImageFromPNG(inputFilename);
-	if (inImage != NULL)
-	{
-		size_t width = CGImageGetWidth(inImage);
-		size_t height = CGImageGetHeight(inImage);
-
-		unsigned char *inData = CreateBytesFromImage(inImage);
-		CGImageRelease(inImage);
-
-		if (inData != NULL)
+		if (argc != 2)
 		{
-			unsigned char *outData = ShrinkBitmapData(inData, width, height);
-			free(inData);
+			fprintf(stderr, "Usage: ShrinkPng <input@2x.png>\n");
+			return EXIT_FAILURE;
+		}
 
-			if (outData != NULL)
+		NSString *inputFilename = @(argv[1]);
+		inputFilename = [inputFilename stringByExpandingTildeInPath];
+
+		NSString *withoutExtension = [inputFilename stringByDeletingPathExtension];
+		if (![withoutExtension hasSuffix:@"@2x"])
+		{
+			fprintf(stderr, "Input file must be @2x\n");
+			return EXIT_FAILURE;
+		}
+
+		NSString *without2x = [withoutExtension substringToIndex:[withoutExtension length] - 3];
+		if ([without2x length] == 0)
+		{
+			fprintf(stderr, "Invalid input filename\n");
+			return EXIT_FAILURE;
+		}
+
+		NSString *outputFilename = [without2x stringByAppendingPathExtension:@"png"];
+
+		CGImageRef inImage = CreateImageFromPNG(inputFilename);
+		if (inImage != NULL)
+		{
+			size_t width = CGImageGetWidth(inImage);
+			size_t height = CGImageGetHeight(inImage);
+
+			unsigned char *inData = CreateBytesFromImage(inImage);
+			CGImageRelease(inImage);
+
+			if (inData != NULL)
 			{
-				CGImageRef outImage = CreateImageFromBytes(outData, width / 2, height / 2);
-				free(outData);
+				unsigned char *outData = ShrinkBitmapData(inData, width, height);
+				free(inData);
 
-				if (outImage != NULL)
+				if (outData != NULL)
 				{
-					SaveImageToPNG(outputFilename, outImage);
-					CGImageRelease(outImage);
+					CGImageRef outImage = CreateImageFromBytes(outData, width / 2, height / 2);
+					free(outData);
+
+					if (outImage != NULL)
+					{
+						SaveImageToPNG(outputFilename, outImage);
+						CGImageRelease(outImage);
+					}
 				}
 			}
 		}
 	}
-
-	[pool drain];
 	return 0;
 }
