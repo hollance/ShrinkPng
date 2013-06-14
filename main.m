@@ -154,6 +154,37 @@ unsigned char *ShrinkBitmapData(unsigned char *inData, size_t width, size_t heig
 	return outData;
 }
 
+void Shrink(NSString *inputFilename, NSString *outputFilename)
+{
+	CGImageRef inImage = CreateImageFromPNG(inputFilename);
+	if (inImage != NULL)
+	{
+		size_t width = CGImageGetWidth(inImage);
+		size_t height = CGImageGetHeight(inImage);
+
+		unsigned char *inData = CreateBytesFromImage(inImage);
+		CGImageRelease(inImage);
+
+		if (inData != NULL)
+		{
+			unsigned char *outData = ShrinkBitmapData(inData, width, height);
+			free(inData);
+
+			if (outData != NULL)
+			{
+				CGImageRef outImage = CreateImageFromBytes(outData, width / 2, height / 2);
+				free(outData);
+
+				if (outImage != NULL)
+				{
+					SaveImageToPNG(outputFilename, outImage);
+					CGImageRelease(outImage);
+				}
+			}
+		}
+	}
+}
+
 int main(int argc, const char *argv[])
 {
 	@autoreleasepool
@@ -183,33 +214,7 @@ int main(int argc, const char *argv[])
 
 		NSString *outputFilename = [without2x stringByAppendingPathExtension:@"png"];
 
-		CGImageRef inImage = CreateImageFromPNG(inputFilename);
-		if (inImage != NULL)
-		{
-			size_t width = CGImageGetWidth(inImage);
-			size_t height = CGImageGetHeight(inImage);
-
-			unsigned char *inData = CreateBytesFromImage(inImage);
-			CGImageRelease(inImage);
-
-			if (inData != NULL)
-			{
-				unsigned char *outData = ShrinkBitmapData(inData, width, height);
-				free(inData);
-
-				if (outData != NULL)
-				{
-					CGImageRef outImage = CreateImageFromBytes(outData, width / 2, height / 2);
-					free(outData);
-
-					if (outImage != NULL)
-					{
-						SaveImageToPNG(outputFilename, outImage);
-						CGImageRelease(outImage);
-					}
-				}
-			}
-		}
+		Shrink(inputFilename, outputFilename);
 	}
 	return 0;
 }
