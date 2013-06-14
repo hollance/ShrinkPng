@@ -109,9 +109,9 @@ unsigned char *ShrinkBitmapData(unsigned char *inData, size_t width, size_t heig
 
 	unsigned char *ptr = outData;
 
-	for (unsigned int y = 0; y < height; y += 2)
+	for (unsigned int y = 0; y < height - 1; y += 2)
 	{
-		for (unsigned int x = 0; x < width; x += 2)
+		for (unsigned int x = 0; x < width - 1; x += 2)
 		{
 			size_t offset1 = (y*width + x)*4;    // top left
 			size_t offset2 = offset1 + 4;        // top right
