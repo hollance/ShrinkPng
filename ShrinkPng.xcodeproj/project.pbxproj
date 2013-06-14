@@ -52,6 +52,7 @@
 				7B26E64B134A115C00C5BC50 /* Products */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		7B26E64B134A115C00C5BC50 /* Products */ = {
 			isa = PBXGroup;
