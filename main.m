@@ -109,9 +109,9 @@ unsigned char *ShrinkBitmapData(unsigned char *inData, size_t width, size_t heig
 
 	unsigned char *ptr = outData;
 
-	for (unsigned int y = 0; y < height; y += 2)
+	for (unsigned int y = 0; y < height - 1; y += 2)
 	{
-		for (unsigned int x = 0; x < width; x += 2)
+		for (unsigned int x = 0; x < width - 1; x += 2)
 		{
 			size_t offset1 = (y*width + x)*4;    // top left
 			size_t offset2 = offset1 + 4;        // top right
@@ -154,61 +154,69 @@ unsigned char *ShrinkBitmapData(unsigned char *inData, size_t width, size_t heig
 	return outData;
 }
 
+void Shrink(NSString *inputFilename, NSString *outputFilename)
+{
+	CGImageRef inImage = CreateImageFromPNG(inputFilename);
+	if (inImage != NULL)
+	{
+		size_t width = CGImageGetWidth(inImage);
+		size_t height = CGImageGetHeight(inImage);
+
+		unsigned char *inData = CreateBytesFromImage(inImage);
+		CGImageRelease(inImage);
+
+		if (inData != NULL)
+		{
+			unsigned char *outData = ShrinkBitmapData(inData, width, height);
+			free(inData);
+
+			if (outData != NULL)
+			{
+				CGImageRef outImage = CreateImageFromBytes(outData, width / 2, height / 2);
+				free(outData);
+
+				if (outImage != NULL)
+				{
+					SaveImageToPNG(outputFilename, outImage);
+					CGImageRelease(outImage);
+				}
+			}
+		}
+	}
+}
+
 int main(int argc, const char *argv[])
 {
 	@autoreleasepool
 	{
-		if (argc != 2)
+		if (argc < 2)
 		{
-			fprintf(stderr, "Usage: ShrinkPng <input@2x.png>\n");
+			fprintf(stderr, "Usage: ShrinkPng <a@2x.png> <b@2x.png> <c@2x.png>...\n");
 			return EXIT_FAILURE;
 		}
 
-		NSString *inputFilename = @(argv[1]);
-		inputFilename = [inputFilename stringByExpandingTildeInPath];
-
-		NSString *withoutExtension = [inputFilename stringByDeletingPathExtension];
-		if (![withoutExtension hasSuffix:@"@2x"])
+		for (int i = 1; i < argc; ++i)
 		{
-			fprintf(stderr, "Input file must be @2x\n");
-			return EXIT_FAILURE;
-		}
+			NSString *inputFilename = @(argv[i]);
+			inputFilename = [inputFilename stringByExpandingTildeInPath];
 
-		NSString *without2x = [withoutExtension substringToIndex:[withoutExtension length] - 3];
-		if ([without2x length] == 0)
-		{
-			fprintf(stderr, "Invalid input filename\n");
-			return EXIT_FAILURE;
-		}
-
-		NSString *outputFilename = [without2x stringByAppendingPathExtension:@"png"];
-
-		CGImageRef inImage = CreateImageFromPNG(inputFilename);
-		if (inImage != NULL)
-		{
-			size_t width = CGImageGetWidth(inImage);
-			size_t height = CGImageGetHeight(inImage);
-
-			unsigned char *inData = CreateBytesFromImage(inImage);
-			CGImageRelease(inImage);
-
-			if (inData != NULL)
+			NSString *withoutExtension = [inputFilename stringByDeletingPathExtension];
+			if (![withoutExtension hasSuffix:@"@2x"])
 			{
-				unsigned char *outData = ShrinkBitmapData(inData, width, height);
-				free(inData);
-
-				if (outData != NULL)
-				{
-					CGImageRef outImage = CreateImageFromBytes(outData, width / 2, height / 2);
-					free(outData);
-
-					if (outImage != NULL)
-					{
-						SaveImageToPNG(outputFilename, outImage);
-						CGImageRelease(outImage);
-					}
-				}
+				fprintf(stderr, "Input file must be @2x\n");
+				return EXIT_FAILURE;
 			}
+
+			NSString *without2x = [withoutExtension substringToIndex:[withoutExtension length] - 3];
+			if ([without2x length] == 0)
+			{
+				fprintf(stderr, "Invalid input filename\n");
+				return EXIT_FAILURE;
+			}
+
+			NSString *outputFilename = [without2x stringByAppendingPathExtension:@"png"];
+
+			Shrink(inputFilename, outputFilename);
 		}
 	}
 	return 0;
