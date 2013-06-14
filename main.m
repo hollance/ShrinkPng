@@ -189,32 +189,35 @@ int main(int argc, const char *argv[])
 {
 	@autoreleasepool
 	{
-		if (argc != 2)
+		if (argc < 2)
 		{
-			fprintf(stderr, "Usage: ShrinkPng <input@2x.png>\n");
+			fprintf(stderr, "Usage: ShrinkPng <a@2x.png> <b@2x.png> <c@2x.png>...\n");
 			return EXIT_FAILURE;
 		}
 
-		NSString *inputFilename = @(argv[1]);
-		inputFilename = [inputFilename stringByExpandingTildeInPath];
-
-		NSString *withoutExtension = [inputFilename stringByDeletingPathExtension];
-		if (![withoutExtension hasSuffix:@"@2x"])
+		for (int i = 1; i < argc; ++i)
 		{
-			fprintf(stderr, "Input file must be @2x\n");
-			return EXIT_FAILURE;
+			NSString *inputFilename = @(argv[i]);
+			inputFilename = [inputFilename stringByExpandingTildeInPath];
+
+			NSString *withoutExtension = [inputFilename stringByDeletingPathExtension];
+			if (![withoutExtension hasSuffix:@"@2x"])
+			{
+				fprintf(stderr, "Input file must be @2x\n");
+				return EXIT_FAILURE;
+			}
+
+			NSString *without2x = [withoutExtension substringToIndex:[withoutExtension length] - 3];
+			if ([without2x length] == 0)
+			{
+				fprintf(stderr, "Invalid input filename\n");
+				return EXIT_FAILURE;
+			}
+
+			NSString *outputFilename = [without2x stringByAppendingPathExtension:@"png"];
+
+			Shrink(inputFilename, outputFilename);
 		}
-
-		NSString *without2x = [withoutExtension substringToIndex:[withoutExtension length] - 3];
-		if ([without2x length] == 0)
-		{
-			fprintf(stderr, "Invalid input filename\n");
-			return EXIT_FAILURE;
-		}
-
-		NSString *outputFilename = [without2x stringByAppendingPathExtension:@"png"];
-
-		Shrink(inputFilename, outputFilename);
 	}
 	return 0;
 }
